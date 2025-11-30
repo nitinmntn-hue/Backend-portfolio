@@ -1,10 +1,15 @@
-const express = require("express");
+const bcrypt = require("bcryptjs");
 const { User, Education, Experience } = require("../models/User");
-
+const jwt = require("jsonwebtoken");
 
 exports.userRegister = async (req, res) => {
   try {
-    const { username, password, name, email, mobile, skills, image, website, education, experience } = req.body;
+    let { username, password, name, email, mobile, skills, image, website, education, experience } = req.body;
+
+    // If username is missing, use email
+    if (!username) {
+      username = email;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -40,14 +45,29 @@ exports.userRegister = async (req, res) => {
 };
 
 exports.userLogin = async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ where: { username } });
-  if (!user) return res.status(400).json({ message: "User not found" });
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: "Username and password are required" });
+    }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    const user = await User.findOne({ where: { username } });
+    if (!user) return res.status(400).json({ success: false, message: "User not found" });
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-  res.json({ token, user });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ success: false, message: "Invalid credentials" });
+
+    const token = jwt.sign(
+      { id: user.id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    const userData = user.toJSON();
+    delete userData.password;
+
+    res.json({ success: true, token, user: userData });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 };
-
