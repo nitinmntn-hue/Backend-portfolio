@@ -16,11 +16,13 @@ app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
-app.use("/api/contact", contactRoutes);
+app.use("/api/contact_info", contactRoutes);
 app.use("/api/internships", internshipRoutes);
 
 
-sequelize.sync().then(() => console.log("Database synced"));
+
+
+sequelize.sync({ force: true }).then(() => console.log("Database synced"));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
