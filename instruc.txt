@@ -1,0 +1,16 @@
+{
+  "password": "mypassword",
+  "name": "Nitin Meena",
+  "email": "nitinm.ntn@gmail.com",
+  "mobile": "9876543210",
+  "skills": ["React", "Node.js", "MySQL"],
+  "image": "https://example.com/profile.jpg",
+  "website": "https://johndoe.dev",
+  "education": [
+    { "schoolCollege": "ABC College", "boardUniversity": "XYZ University", "year": "2022" }
+  ],
+  "experience": [
+    { "company": "TechCorp", "joiningDate": "2021-01-01", "leftDate": "2022-06-01", "totalExperience": "1.5 years", "post": "Software Engineer" }
+  ]
+}
+
