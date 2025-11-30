@@ -11,7 +11,9 @@ const User = sequelize.define("User", {
   mobile: { type: DataTypes.STRING },
   skills: { type: DataTypes.JSON }, // store array of skills
   image: { type: DataTypes.STRING }, // URL or file path
-  website: { type: DataTypes.STRING }
+  website: { type: DataTypes.STRING },
+  // ✅ Admin flag
+  isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false }
 });
 
 // Education table
@@ -37,5 +39,14 @@ Education.belongsTo(User);
 
 User.hasMany(Experience, { onDelete: "CASCADE" });
 Experience.belongsTo(User);
+
+// ✅ Hook: if username is missing, set it to email
+User.beforeValidate((user) => {
+  if (!user.username && user.email) {
+    user.username = user.email;
+  }
+});
+
+
 
 module.exports = { User, Education, Experience };
