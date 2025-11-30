@@ -18,7 +18,6 @@ router.post("/", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 // Get all messages (admin only)
 router.post("/all", auth, async (req, res) => {
   try {
@@ -32,8 +31,6 @@ router.post("/all", auth, async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
-
 
 module.exports = router;
 

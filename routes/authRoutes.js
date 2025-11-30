@@ -1,5 +1,4 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
 const userAuth = require('../controllers/authControllers');
 const router = express.Router();
 
